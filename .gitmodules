@@ -1,153 +1,156 @@
-[submodule "Controls"]
+[submodule "dep/Controls"]
 	path = Controls
 	url = https://github.com/horsicq/Controls
-[submodule "FormatDialogs"]
+[submodule "dep/FormatDialogs"]
 	path = FormatDialogs
 	url = https://github.com/horsicq/FormatDialogs
-[submodule "FormatWidgets"]
+[submodule "dep/FormatWidgets"]
 	path = FormatWidgets
 	url = https://github.com/horsicq/FormatWidgets
-[submodule "Formats"]
+[submodule "dep/Formats"]
 	path = Formats
 	url = https://github.com/horsicq/Formats
-[submodule "SpecAbstract"]
+[submodule "dep/SpecAbstract"]
 	path = SpecAbstract
 	url = https://github.com/horsicq/SpecAbstract
-[submodule "StaticScan"]
+[submodule "dep/StaticScan"]
 	path = StaticScan
 	url = https://github.com/horsicq/StaticScan
-[submodule "XArchive"]
+[submodule "dep/XArchive"]
 	path = XArchive
 	url = https://github.com/horsicq/XArchive
-[submodule "XCapstone"]
+[submodule "dep/XCapstone"]
 	path = XCapstone
 	url = https://github.com/horsicq/XCapstone
-[submodule "XCppfilt"]
+[submodule "dep/XCppfilt"]
 	path = XCppfilt
 	url = https://github.com/horsicq/XCppfilt
-[submodule "XDEX"]
+[submodule "dep/XDEX"]
 	path = XDEX
 	url = https://github.com/horsicq/XDEX
-[submodule "XDemangle"]
+[submodule "dep/XDemangle"]
 	path = XDemangle
 	url = https://github.com/horsicq/XDemangle
-[submodule "XDemangleWidget"]
+[submodule "dep/XDemangleWidget"]
 	path = XDemangleWidget
 	url = https://github.com/horsicq/XDemangleWidget
-[submodule "XDisasm"]
+[submodule "dep/XDisasm"]
 	path = XDisasm
 	url = https://github.com/horsicq/XDisasm
-[submodule "XDisasmView"]
+[submodule "dep/XDisasmView"]
 	path = XDisasmView
 	url = https://github.com/horsicq/XDisasmView
-[submodule "XDynStructs"]
+[submodule "dep/XDynStructs"]
 	path = XDynStructs
 	url = https://github.com/horsicq/XDynStructs
-[submodule "XDynStructsEngine"]
+[submodule "dep/XDynStructsEngine"]
 	path = XDynStructsEngine
 	url = https://github.com/horsicq/XDynStructsEngine
-[submodule "XDynStructsWidget"]
+[submodule "dep/XDynStructsWidget"]
 	path = XDynStructsWidget
 	url = https://github.com/horsicq/XDynStructsWidget
-[submodule "XEntropyWidget"]
+[submodule "dep/XEntropyWidget"]
 	path = XEntropyWidget
 	url = https://github.com/horsicq/XEntropyWidget
-[submodule "XFileInfo"]
+[submodule "dep/XFileInfo"]
 	path = XFileInfo
 	url = https://github.com/horsicq/XFileInfo
-[submodule "XHashWidget"]
+[submodule "dep/XHashWidget"]
 	path = XHashWidget
 	url = https://github.com/horsicq/XHashWidget
-[submodule "XHexEdit"]
+[submodule "dep/XHexEdit"]
 	path = XHexEdit
 	url = https://github.com/horsicq/XHexEdit
-[submodule "XHexView"]
+[submodule "dep/XHexView"]
 	path = XHexView
 	url = https://github.com/horsicq/XHexView
-[submodule "XInfoDB"]
+[submodule "dep/XInfoDB"]
 	path = XInfoDB
 	url = https://github.com/horsicq/XInfoDB
-[submodule "XLLVMDemangler"]
+[submodule "dep/XLLVMDemangler"]
 	path = XLLVMDemangler
 	url = https://github.com/horsicq/XLLVMDemangler
-[submodule "XMemoryMapWidget"]
+[submodule "dep/XMemoryMapWidget"]
 	path = XMemoryMapWidget
 	url = https://github.com/horsicq/XMemoryMapWidget
-[submodule "XOptions"]
+[submodule "dep/XOptions"]
 	path = XOptions
 	url = https://github.com/horsicq/XOptions
-[submodule "XPDF"]
+[submodule "dep/XPDF"]
 	path = XPDF
 	url = https://github.com/horsicq/XPDF
-[submodule "XQwt"]
+[submodule "dep/XQwt"]
 	path = XQwt
 	url = https://github.com/horsicq/XQwt
-[submodule "XShortcuts"]
+[submodule "dep/XShortcuts"]
 	path = XShortcuts
 	url = https://github.com/horsicq/XShortcuts
-[submodule "XStyles"]
+[submodule "dep/XStyles"]
 	path = XStyles
 	url = https://github.com/horsicq/XStyles
-[submodule "XSymbolsWidget"]
+[submodule "dep/XSymbolsWidget"]
 	path = XSymbolsWidget
 	url = https://github.com/horsicq/XSymbolsWidget
-[submodule "XTranslation"]
+[submodule "dep/XTranslation"]
 	path = XTranslation
 	url = https://github.com/horsicq/XTranslation
-[submodule "archive_widget"]
+[submodule "dep/archive_widget"]
 	path = archive_widget
 	url = https://github.com/horsicq/archive_widget
-[submodule "build_tools"]
+[submodule "dep/build_tools"]
 	path = build_tools
 	url = https://github.com/horsicq/build_tools
-[submodule "nfd_widget"]
+[submodule "dep/nfd_widget"]
 	path = nfd_widget
 	url = https://github.com/horsicq/nfd_widget
-[submodule "signatures"]
+[submodule "dep/signatures"]
 	path = signatures
 	url = https://github.com/horsicq/signatures
-[submodule "XOnlineTools"]
+[submodule "dep/XOnlineTools"]
 	path = XOnlineTools
 	url = https://github.com/horsicq/XOnlineTools
-[submodule "XAboutWidget"]
+[submodule "dep/XAboutWidget"]
 	path = XAboutWidget
 	url = https://github.com/horsicq/XAboutWidget
-[submodule "die_script"]
+[submodule "dep/die_script"]
 	path = die_script
 	url = https://github.com/horsicq/die_script
-[submodule "hex_templates"]
+[submodule "dep/hex_templates"]
 	path = hex_templates
 	url = https://github.com/horsicq/hex_templates
-[submodule "XExtractorWidget"]
+[submodule "dep/XExtractorWidget"]
 	path = XExtractorWidget
 	url = https://github.com/horsicq/XExtractorWidget
-[submodule "XExtractor"]
+[submodule "dep/XExtractor"]
 	path = XExtractor
 	url = https://github.com/horsicq/XExtractor
-[submodule "XUpdate"]
+[submodule "dep/XUpdate"]
 	path = XUpdate
 	url = https://github.com/horsicq/XUpdate
-[submodule "XGithub"]
+[submodule "dep/XGithub"]
 	path = XGithub
 	url = https://github.com/horsicq/XGithub
-[submodule "XVisualizationWidget"]
+[submodule "dep/XVisualizationWidget"]
 	path = XVisualizationWidget
 	url = https://github.com/horsicq/XVisualizationWidget
-[submodule "XDecompiler"]
+[submodule "dep/XDecompiler"]
 	path = XDecompiler
 	url = https://github.com/horsicq/XDecompiler
-[submodule "XYara"]
+[submodule "dep/XYara"]
 	path = XYara
 	url = https://github.com/horsicq/XYara
-[submodule "yara_widget"]
+[submodule "dep/yara_widget"]
 	path = yara_widget
 	url = https://github.com/horsicq/yara_widget
-[submodule "die_widget"]
+[submodule "dep/die_widget"]
 	path = die_widget
 	url = https://github.com/horsicq/die_widget
-[submodule "Detect-It-Easy"]
+[submodule "dep/Detect-It-Easy"]
 	path = Detect-It-Easy
 	url = https://github.com/horsicq/Detect-It-Easy
-[submodule "XDataConvertorWidget"]
+[submodule "dep/XDataConvertorWidget"]
 	path = XDataConvertorWidget
 	url = https://github.com/horsicq/XDataConvertorWidget
+[submodule "XLog"]
+	path = XLog
+	url = https://github.com/horsicq/XLog
