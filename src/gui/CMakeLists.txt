@@ -12,6 +12,12 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+if(WIN32)
+    set(CMAKE_EXE_LINKER_FLAGS    "${CMAKE_EXE_LINKER_FLAGS} /MANIFEST:NO")
+    set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MANIFEST:NO")
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /MANIFEST:NO")
+endif()
+
 add_definitions(-DUSE_DEX)
 add_definitions(-DUSE_PDF)
 add_definitions(-DUSE_ARCHIVE)
@@ -48,12 +54,21 @@ set(PROJECT_SOURCES
 if(WIN32)
     add_executable(xhexviewer WIN32
         ${PROJECT_SOURCES}
+        ../../res/resource.rc
     )
 else()
     add_executable(xhexviewer
         ${PROJECT_SOURCES}
     )
 endif()
+
+set_target_properties(xhexviewer PROPERTIES
+    ${BUNDLE_ID_OPTION}
+    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    MACOSX_BUNDLE TRUE
+    WIN32_EXECUTABLE TRUE
+)
 
 target_link_libraries(xhexviewer PRIVATE bzip2)
 target_link_libraries(xhexviewer PRIVATE lzma)
@@ -94,6 +109,12 @@ if(WIN32)
     install (FILES ../../dep/signatures/crypto.db DESTINATION "./signatures" OPTIONAL)
     deploy_qt()
     deploy_msvc()
+elseif(APPLE)
+    install(TARGETS xhexviewer
+        BUNDLE DESTINATION .
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
 else()
     install (TARGETS xhexviewer DESTINATION ${CMAKE_INSTALL_BINDIR})
     install (DIRECTORY ../../dep/Detect-It-Easy/db DESTINATION ${CMAKE_INSTALL_LIBDIR}/xhexviewer OPTIONAL)

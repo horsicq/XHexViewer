@@ -1,4 +1,4 @@
-/* Copyright (c) 2019-2023 hors<horsicq@gmail.com>
+/* Copyright (c) 2019-2024 hors<horsicq@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -200,7 +200,7 @@ void GuiMainWindow::processFile(const QString &sFileName)
         if (g_pFile) {
             XBinary xbinary(g_pFile);
             if (xbinary.isValid()) {
-                g_pXInfo->setData(g_pFile, xbinary.getFileType());
+                g_pXInfo->setData(g_pFile, xbinary.getFileType(), XBinary::DM_DATA);
                 g_infoMenu.setData(g_pXInfo);
 
                 XHexView::OPTIONS options = {};

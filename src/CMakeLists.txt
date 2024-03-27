@@ -12,16 +12,18 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 endif()
 
 file (STRINGS ${PROJECT_SOURCE_DIR}/release_version.txt X_PROJECT_VERSION)
-
 project(XHexViewer VERSION ${X_PROJECT_VERSION} LANGUAGES CXX)
 
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "XHexViewer")
-set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "XHexViewer")
-set(CPACK_PACKAGE_VENDOR "ntinfo")
-set(CPACK_PACKAGE_NAME "XHexViewer")
-set(CPACK_DEBIAN_PACKAGE_MAINTAINER "horsicq@gmail.com")
+set(X_COMPANYNAME "ntinfo")
+set(X_PROJECTNAME "XHexViewer")
+set(X_MAINTAINER "horsicq@gmail.com")
+set(X_DESCRIPTION "XHexViewer is a HEX viewer")
+set(X_HOMEPAGE "http://ntinfo.biz")
+set(X_ORIGINAL_FILENAME "xhexviewer")
 
-set(X_MACOSX_BUNDLE_GUI_IDENTIFIER com.example.xnetdumper CACHE INTERNAL "X_MACOSX_BUNDLE_GUI_IDENTIFIER")
+if(${QT_VERSION} VERSION_LESS 6.1.0)
+  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.xhexviewer)
+endif()
 
 deploy_init()
 
