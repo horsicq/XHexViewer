@@ -59,10 +59,10 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui
     g_xShortcuts.setNative(g_xOptions.isNative(), g_xOptions.getApplicationDataPath());
 
     g_xShortcuts.addGroup(XShortcuts::GROUPID_STRINGS);
-//    g_xShortcuts.addGroup(XShortcuts::GROUPID_SIGNATURE);
+    //    g_xShortcuts.addGroup(XShortcuts::GROUPID_SIGNATURE);
     g_xShortcuts.addGroup(XShortcuts::GROUPID_HEX);
-//    g_xShortcuts.addGroup(XShortcuts::GROUPID_DISASM);
-//    g_xShortcuts.addGroup(XShortcuts::GROUPID_FIND);
+    //    g_xShortcuts.addGroup(XShortcuts::GROUPID_DISASM);
+    //    g_xShortcuts.addGroup(XShortcuts::GROUPID_FIND);
 
     g_xShortcuts.load();
 
@@ -290,7 +290,7 @@ void GuiMainWindow::actionShortcutsSlot()
 
 void GuiMainWindow::actionDemangleSlot()
 {
-//    DialogDemangle dialogDemangle(this);
+    //    DialogDemangle dialogDemangle(this);
 
-//    dialogDemangle.exec();
+    //    dialogDemangle.exec();
 }
