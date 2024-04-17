@@ -25,10 +25,7 @@
 
 int main(int argc, char *argv[])
 {
-    // TODO move to XOptions
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-#endif
+    XOptions::adjustApplicationInitAttributes();
 #ifdef Q_OS_MAC
 #ifndef QT_DEBUG
     QCoreApplication::setLibraryPaths(QStringList(QString(argv[0]).remove("MacOS/XHexViewer") + "PlugIns"));
