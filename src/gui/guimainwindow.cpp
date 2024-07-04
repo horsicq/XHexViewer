@@ -40,7 +40,10 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui
     g_xOptions.addID(XOptions::ID_VIEW_STYLE, "Fusion");
     g_xOptions.addID(XOptions::ID_VIEW_QSS, "");
     g_xOptions.addID(XOptions::ID_VIEW_LANG, "System");
-    g_xOptions.addID(XOptions::ID_VIEW_FONT, "");
+    g_xOptions.addID(XOptions::ID_VIEW_FONT_CONTROLS, XOptions::getDefaultFont().toString());
+    g_xOptions.addID(XOptions::ID_VIEW_FONT_TABLEVIEWS, XOptions::getMonoFont().toString());
+    g_xOptions.addID(XOptions::ID_VIEW_FONT_TREEVIEWS, XOptions::getDefaultFont().toString());
+    g_xOptions.addID(XOptions::ID_VIEW_FONT_TEXTEDITS, XOptions::getMonoFont().toString());
     g_xOptions.addID(XOptions::ID_VIEW_STAYONTOP, false);
     g_xOptions.addID(XOptions::ID_VIEW_SHOWLOGO, false);
     g_xOptions.addID(XOptions::ID_FILE_SAVELASTDIRECTORY, true);
@@ -65,6 +68,8 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui
     //    g_xShortcuts.addGroup(XShortcuts::GROUPID_FIND);
 
     g_xShortcuts.load();
+
+    g_pInfoMenu = new XInfoMenu(&g_xShortcuts, &g_xOptions);
 
     ui->widgetViewer->setGlobal(&g_xShortcuts, &g_xOptions);
 
@@ -113,7 +118,7 @@ void GuiMainWindow::createMenus()
 
     pMenuFile->addAction(pActionOpen);
     pMenuFile->addMenu(g_xOptions.createRecentFilesMenu(this));
-    pMenuFile->addMenu(g_infoMenu.createMenu(this));
+    pMenuFile->addMenu(g_pInfoMenu->createMenu(this));
     pMenuFile->addAction(pActionClose);
     pMenuFile->addAction(pActionExit);
     pMenuTools->addAction(pActionDemangle);
@@ -201,7 +206,7 @@ void GuiMainWindow::processFile(const QString &sFileName)
             XBinary xbinary(g_pFile);
             if (xbinary.isValid()) {
                 g_pXInfo->setData(g_pFile, xbinary.getFileType(), XBinary::DM_DATA);
-                g_infoMenu.setData(g_pXInfo);
+                g_pInfoMenu->setData(g_pXInfo);
 
                 XHexView::OPTIONS options = {};
 
@@ -235,7 +240,7 @@ void GuiMainWindow::closeCurrentFile()
     if (g_pXInfo) {
         delete g_pXInfo;
         g_pXInfo = nullptr;
-        g_infoMenu.reset();
+        g_pInfoMenu->reset();
     }
 
     if (g_pFile) {
