@@ -22,7 +22,7 @@
 
 #include "ui_dialogoptions.h"
 
-DialogOptions::DialogOptions(QWidget *pParent, XOptions *pOptions) : QDialog(pParent), ui(new Ui::DialogOptions)
+DialogOptions::DialogOptions(QWidget *pParent, XOptions *pOptions) : XShortcutsDialog(pParent), ui(new Ui::DialogOptions)
 {
     ui->setupUi(this);
 
@@ -39,4 +39,14 @@ DialogOptions::DialogOptions(QWidget *pParent, XOptions *pOptions) : QDialog(pPa
 DialogOptions::~DialogOptions()
 {
     delete ui;
+}
+
+void DialogOptions::adjustView()
+{
+
+}
+
+void DialogOptions::registerShortcuts(bool bState)
+{
+    Q_UNUSED(bState)
 }

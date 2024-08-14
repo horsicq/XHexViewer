@@ -21,28 +21,28 @@
 #ifndef DIALOGOPTIONS_H
 #define DIALOGOPTIONS_H
 
-#include <QDialog>
-#include <QDir>
-#include <QFileDialog>
-#include <QMessageBox>
-#include <QSettings>
-
 #include "../global.h"
 #include "searchsignaturesoptionswidget.h"
 #include "xbinary.h"
 #include "xhexviewoptionswidget.h"
 #include "xoptions.h"
+#include "xshortcutsdialog.h"
 
 namespace Ui {
 class DialogOptions;
 }
 
-class DialogOptions : public QDialog {
+class DialogOptions : public XShortcutsDialog {
     Q_OBJECT
 
 public:
     explicit DialogOptions(QWidget *pParent, XOptions *pOptions);
     ~DialogOptions();
+
+    virtual void adjustView();
+
+protected:
+    virtual void registerShortcuts(bool bState);
 
 private:
     Ui::DialogOptions *ui;

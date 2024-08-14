@@ -159,6 +159,7 @@ void GuiMainWindow::actionExitSlot()
 void GuiMainWindow::actionOptionsSlot()
 {
     DialogOptions dialogOptions(this, &g_xOptions);
+    dialogOptions.setGlobal(&g_xShortcuts, &g_xOptions);
     dialogOptions.exec();
 
     ui->widgetViewer->adjustView();
