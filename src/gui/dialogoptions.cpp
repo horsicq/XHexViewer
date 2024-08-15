@@ -43,7 +43,6 @@ DialogOptions::~DialogOptions()
 
 void DialogOptions::adjustView()
 {
-
 }
 
 void DialogOptions::registerShortcuts(bool bState)
