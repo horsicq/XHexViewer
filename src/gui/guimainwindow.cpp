@@ -209,10 +209,10 @@ void GuiMainWindow::processFile(const QString &sFileName)
                 g_pXInfo->setData(g_pFile, xbinary.getFileType(), XBinary::DM_DATA);
                 g_pInfoMenu->setData(g_pXInfo);
 
-                XHexView::OPTIONS options = {};
+                XHexViewWidget::OPTIONS options = {};
 
-                ui->widgetViewer->setXInfoDB(g_pXInfo);
                 ui->widgetViewer->setData(g_pFile, options);
+                ui->widgetViewer->setXInfoDB(g_pXInfo);
 
                 ui->widgetViewer->reload();
 
