@@ -208,6 +208,7 @@ void GuiMainWindow::processFile(const QString &sFileName)
             if (xbinary.isValid()) {
                 g_pXInfo->setData(g_pFile, xbinary.getFileType(), XBinary::DM_DATA);
                 g_pInfoMenu->setData(g_pXInfo);
+                g_pInfoMenu->tryToLoad();
 
                 XHexViewWidget::OPTIONS options = {};
 
@@ -239,6 +240,7 @@ void GuiMainWindow::errorMessageSlot(const QString &sText)
 void GuiMainWindow::closeCurrentFile()
 {
     if (g_pXInfo) {
+        g_pInfoMenu->tryToSave();
         delete g_pXInfo;
         g_pXInfo = nullptr;
         g_pInfoMenu->reset();
