@@ -26,10 +26,11 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui
 {
     ui->setupUi(this);
 
+    // ui->mdiArea->setDocumentMode(false);
+    ui->mdiArea->setViewMode(QMdiArea::TabbedView);
+
     g_pFile = nullptr;
     g_pXInfo = nullptr;
-
-    ui->stackedWidget->setCurrentIndex(0);
 
     setWindowTitle(XOptions::getTitle(X_APPLICATIONDISPLAYNAME, X_APPLICATIONVERSION));
 
@@ -71,7 +72,7 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui
 
     g_pInfoMenu = new XInfoMenu(&g_xShortcuts, &g_xOptions);
 
-    ui->widgetViewer->setGlobal(&g_xShortcuts, &g_xOptions);
+    // ui->widgetViewer->setGlobal(&g_xShortcuts, &g_xOptions);
 
     connect(&g_xOptions, SIGNAL(openFile(QString)), this, SLOT(processFile(QString)));
     connect(&g_xOptions, SIGNAL(errorMessage(QString)), this, SLOT(errorMessageSlot(QString)));
@@ -80,7 +81,7 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui
 
     adjustWindow();
 
-    ui->widgetViewer->setReadonlyVisible(true);
+    // ui->widgetViewer->setReadonlyVisible(true);
 
     if (QCoreApplication::arguments().count() > 1) {
         QString sFileName = QCoreApplication::arguments().at(1);
@@ -162,7 +163,7 @@ void GuiMainWindow::actionOptionsSlot()
     dialogOptions.setGlobal(&g_xShortcuts, &g_xOptions);
     dialogOptions.exec();
 
-    ui->widgetViewer->adjustView();
+    // ui->widgetViewer->adjustView();
     adjustWindow();
 }
 
@@ -174,15 +175,15 @@ void GuiMainWindow::actionAboutSlot()
 
 void GuiMainWindow::adjustWindow()
 {
-    ui->widgetViewer->adjustView();
+    // ui->widgetViewer->adjustView();
 
     g_xOptions.adjustWindow(this);
 
-    if (g_xOptions.isShowLogo()) {
-        ui->labelLogo->show();
-    } else {
-        ui->labelLogo->hide();
-    }
+    // if (g_xOptions.isShowLogo()) {
+    //     ui->labelLogo->show();
+    // } else {
+    //     ui->labelLogo->hide();
+    // }
 }
 
 void GuiMainWindow::processFile(const QString &sFileName)
@@ -192,35 +193,43 @@ void GuiMainWindow::processFile(const QString &sFileName)
 
         closeCurrentFile();
 
-        g_pFile = new QFile;
-        g_pXInfo = new XInfoDB;
+        QFile *pFile = new QFile;
+        XInfoDB *pXInfo = new XInfoDB;
 
-        g_pFile->setFileName(sFileName);
+        pFile->setFileName(sFileName);
 
-        if (!g_pFile->open(QIODevice::ReadWrite)) {
-            if (!g_pFile->open(QIODevice::ReadOnly)) {
+        if (!pFile->open(QIODevice::ReadWrite)) {
+            if (!pFile->open(QIODevice::ReadOnly)) {
                 closeCurrentFile();
             }
         }
 
-        if (g_pFile) {
-            XBinary xbinary(g_pFile);
+        if (pFile) {
+            XBinary xbinary(pFile);
             if (xbinary.isValid()) {
-                g_pXInfo->setData(g_pFile, xbinary.getFileType(), XBinary::DM_DATA);
-                g_pInfoMenu->setData(g_pXInfo);
+                pXInfo->setData(pFile, xbinary.getFileType(), XBinary::DM_DATA);
+                g_pInfoMenu->setData(pXInfo);
                 g_pInfoMenu->tryToLoad();
 
                 XHexViewWidget::OPTIONS options = {};
 
-                ui->widgetViewer->setData(g_pFile, options);
-                ui->widgetViewer->setXInfoDB(g_pXInfo);
+                XHexViewWidget *pHexViewWidget = new XHexViewWidget;
+                pHexViewWidget->setData(pFile, options);
+                pHexViewWidget->setXInfoDB(pXInfo);
+                pHexViewWidget->reload();
 
-                ui->widgetViewer->reload();
+                ui->mdiArea->addSubWindow(pHexViewWidget);
+                pHexViewWidget->show();
+
+                // ui->widgetViewer->setData(g_pFile, options);
+                // ui->widgetViewer->setXInfoDB(g_pXInfo);
+
+                // ui->widgetViewer->reload();
 
                 adjustWindow();
 
                 setWindowTitle(sFileName);
-                ui->stackedWidget->setCurrentIndex(1);
+                // ui->stackedWidget->setCurrentIndex(1);
             } else {
                 QMessageBox::critical(this, tr("Error"), tr("It is not a valid file"));
             }
@@ -252,8 +261,8 @@ void GuiMainWindow::closeCurrentFile()
         g_pFile = nullptr;
     }
 
-    ui->stackedWidget->setCurrentIndex(0);
-    ui->widgetViewer->cleanup();
+    // ui->stackedWidget->setCurrentIndex(0);
+    // ui->widgetViewer->cleanup();
 
     setWindowTitle(XOptions::getTitle(X_APPLICATIONDISPLAYNAME, X_APPLICATIONVERSION));
 }
