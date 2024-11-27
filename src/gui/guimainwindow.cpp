@@ -214,6 +214,7 @@ void GuiMainWindow::processFile(const QString &sFileName)
                 XHexViewWidget::OPTIONS options = {};
 
                 XHexViewWidget *pHexViewWidget = new XHexViewWidget;
+                pHexViewWidget->setGlobal(&g_xShortcuts, &g_xOptions);
                 pHexViewWidget->setData(pFile, options);
                 pHexViewWidget->setXInfoDB(pXInfo);
                 pHexViewWidget->reload();
