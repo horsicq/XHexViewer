@@ -216,7 +216,7 @@ void GuiMainWindow::processFile(const QString &sFileName)
                 XHexViewWidget *pHexViewWidget = new XHexViewWidget;
                 pHexViewWidget->setGlobal(&g_xShortcuts, &g_xOptions);
                 pHexViewWidget->setData(pFile, options);
-                pHexViewWidget->setXInfoDB(pXInfo);
+                pHexViewWidget->setXInfoDB(pXInfo, "main");
                 pHexViewWidget->reload();
 
                 ui->mdiArea->addSubWindow(pHexViewWidget);
