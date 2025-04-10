@@ -207,7 +207,7 @@ void GuiMainWindow::processFile(const QString &sFileName)
         if (pFile) {
             XBinary xbinary(pFile);
             if (xbinary.isValid()) {
-                pXInfo->setData(pFile, xbinary.getFileType(), XBinary::DM_DATA);
+                pXInfo->setData(pFile, xbinary.getFileType());
                 g_pInfoMenu->setData(pXInfo);
                 g_pInfoMenu->tryToLoad();
 
@@ -216,7 +216,7 @@ void GuiMainWindow::processFile(const QString &sFileName)
                 XHexViewWidget *pHexViewWidget = new XHexViewWidget;
                 pHexViewWidget->setGlobal(&g_xShortcuts, &g_xOptions);
                 pHexViewWidget->setData(pFile, options);
-                pHexViewWidget->setXInfoDB(pXInfo, "main");
+                pHexViewWidget->setXInfoDB(pXInfo);
                 pHexViewWidget->reload();
 
                 ui->mdiArea->addSubWindow(pHexViewWidget);
