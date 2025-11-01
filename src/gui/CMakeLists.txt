@@ -73,6 +73,7 @@ set_target_properties(xhexviewer PROPERTIES
 target_link_libraries(xhexviewer PRIVATE bzip2)
 target_link_libraries(xhexviewer PRIVATE lzma)
 target_link_libraries(xhexviewer PRIVATE zlib)
+target_link_libraries(xhexviewer PRIVATE ppmd)
 target_link_libraries(xhexviewer PRIVATE capstone)
 target_link_libraries(xhexviewer PRIVATE cppfilt)
 target_link_libraries(xhexviewer PRIVATE yara)
