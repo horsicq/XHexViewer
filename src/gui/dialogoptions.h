@@ -37,16 +37,17 @@ class DialogOptions : public XShortcutsDialog {
 
 public:
     explicit DialogOptions(QWidget *pParent, XOptions *pOptions);
-    ~DialogOptions();
+    ~DialogOptions() override;
 
-    virtual void adjustView();
+    void setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions) override;
+    void adjustView() override;
 
 protected:
-    virtual void registerShortcuts(bool bState);
+    void registerShortcuts(bool bState) override;
 
 private:
     Ui::DialogOptions *ui;
-    XHexViewOptionsWidget *g_pXHexViewOptionsWidget;
+    XHexViewOptionsWidget *m_pXHexViewOptionsWidget;
 };
 
 #endif  // DIALOGOPTIONS_H

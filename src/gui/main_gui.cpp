@@ -19,47 +19,66 @@
  * SOFTWARE.
  */
 #include <QApplication>
-#include <QStyleFactory>
+#include <QIcon>
+#include <cstdio>
 
+#include "../global.h"
 #include "guimainwindow.h"
+#include "xoptions.h"
 
-int main(int argc, char *argv[])
+namespace {
+
+void configureApplicationMetadata()
 {
-    XOptions::adjustApplicationInitAttributes();
-#ifdef Q_OS_MAC
-#ifndef QT_DEBUG
-    QCoreApplication::setLibraryPaths(QStringList(QString(argv[0]).remove("MacOS/XHexViewer") + "PlugIns"));
-#endif
-#endif
     QCoreApplication::setOrganizationName(X_ORGANIZATIONNAME);
     QCoreApplication::setOrganizationDomain(X_ORGANIZATIONDOMAIN);
     QCoreApplication::setApplicationName(X_APPLICATIONNAME);
     QCoreApplication::setApplicationVersion(X_APPLICATIONVERSION);
+}
 
-    if ((argc == 2) && ((QString(argv[1]) == "--version") || (QString(argv[1]) == "-v"))) {
-        QString sInfo = QString("%1 v%2").arg(X_APPLICATIONDISPLAYNAME, X_APPLICATIONVERSION);
-        printf("%s\n", sInfo.toUtf8().data());
+}  // namespace
+
+int main(int argc, char *argv[])
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
+#ifdef Q_OS_MAC
+#ifndef QT_DEBUG
+    QString libraryPath = QString::fromLocal8Bit(argv[0]);
+    libraryPath = libraryPath.remove(QStringLiteral("MacOS/") + QStringLiteral(X_APPLICATIONNAME)) + QStringLiteral("PlugIns");
+    QCoreApplication::setLibraryPaths(QStringList(libraryPath));
+#endif
+#endif
+
+    configureApplicationMetadata();
+
+    if ((argc == 2) && ((QString::fromLocal8Bit(argv[1]) == QStringLiteral("--version")) || (QString::fromLocal8Bit(argv[1]) == QStringLiteral("-v")))) {
+        const QString info = QStringLiteral("%1 v%2").arg(QStringLiteral(X_APPLICATIONDISPLAYNAME), QStringLiteral(X_APPLICATIONVERSION));
+        std::printf("%s\n", info.toUtf8().constData());
 
         return 0;
     }
 
-    QApplication a(argc, argv);
-    // TODO set main image
+    QApplication application(argc, argv);
+    application.setWindowIcon(QIcon(QStringLiteral(":/main.png")));
 
-    XOptions xOptions;
+#ifdef Q_OS_LINUX
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+    application.setDesktopFileName(QStringLiteral(X_APPLICATIONNAME));
+#endif
+#endif
 
-    xOptions.setName(X_OPTIONSFILE);
+    XOptions options;
+    options.setName(X_OPTIONSFILE);
+    options.addID(XOptions::ID_VIEW_STYLE, QStringLiteral("Fusion"));
+    options.addID(XOptions::ID_VIEW_LANG, QStringLiteral("System"));
+    options.addID(XOptions::ID_VIEW_QSS, QStringLiteral(""));
+    options.load();
+    XOptions::adjustApplicationView(X_APPLICATIONNAME, &options);
 
-    xOptions.addID(XOptions::ID_VIEW_LANG, "System");
-    xOptions.addID(XOptions::ID_VIEW_QSS);
-    xOptions.addID(XOptions::ID_VIEW_STYLE, "Fusion");
+    GuiMainWindow window;
+    window.show();
 
-    xOptions.load();
-
-    XOptions::adjustApplicationView(X_APPLICATIONNAME, &xOptions);
-
-    GuiMainWindow w;
-    w.show();
-
-    return a.exec();
+    return application.exec();
 }

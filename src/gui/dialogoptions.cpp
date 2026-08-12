@@ -26,12 +26,12 @@ DialogOptions::DialogOptions(QWidget *pParent, XOptions *pOptions) : XShortcutsD
 {
     ui->setupUi(this);
 
-    g_pXHexViewOptionsWidget = new XHexViewOptionsWidget(this);
+    m_pXHexViewOptionsWidget = new XHexViewOptionsWidget(this);
 
     ui->widgetOptions->setOptions(pOptions, X_APPLICATIONDISPLAYNAME);
 
-    ui->widgetOptions->addPage(g_pXHexViewOptionsWidget, tr("Hex"));
-    g_pXHexViewOptionsWidget->setOptions(pOptions);
+    ui->widgetOptions->addPage(m_pXHexViewOptionsWidget, tr("Hex"));
+    m_pXHexViewOptionsWidget->setOptions(pOptions);
 
     ui->widgetOptions->setCurrentPage(1);
 }
@@ -41,8 +41,15 @@ DialogOptions::~DialogOptions()
     delete ui;
 }
 
+void DialogOptions::setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions)
+{
+    ui->widgetOptions->setGlobal(pShortcuts, pXOptions);
+    XShortcutsDialog::setGlobal(pShortcuts, pXOptions);
+}
+
 void DialogOptions::adjustView()
 {
+    ui->widgetOptions->adjustView();
 }
 
 void DialogOptions::registerShortcuts(bool bState)
