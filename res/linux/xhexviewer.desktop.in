@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=@PROJECT_VERSION@
+Type=Application
+Name=XHexViewer
+Comment=Hexadecimal file viewer and binary analysis utility
+Exec=xhexviewer
+Icon=xhexviewer
+Terminal=false
+Categories=Development;Utility;
