@@ -63,6 +63,7 @@ target_link_libraries(${XHEXVIEWER_GUI_TARGET} PRIVATE
     lzma
     zlib
     ppmd
+    xarchive_7zip
     capstone
     cppfilt
     yara
