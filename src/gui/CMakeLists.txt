@@ -87,10 +87,13 @@ if(TARGET xhexviewer_translations)
     add_dependencies(${XHEXVIEWER_GUI_TARGET} xhexviewer_translations)
 endif()
 
+# Runtime data goes to X_RESOURCES, never to CMAKE_INSTALL_LIBDIR - the Debian
+# multiarch lib/x86_64-linux-gnu is not on the list convertPathName() searches.
+set(XHEXVIEWER_DATA_DESTINATION "${X_RESOURCES}")
+
 if(UNIX AND NOT APPLE)
     set(XHEXVIEWER_RUNTIME_DESTINATION "${CMAKE_INSTALL_BINDIR}")
     set(XHEXVIEWER_DOC_DESTINATION "${CMAKE_INSTALL_DOCDIR}/xhexviewer")
-    set(XHEXVIEWER_DATA_DESTINATION "${CMAKE_INSTALL_LIBDIR}/xhexviewer")
     set(XHEXVIEWER_DESKTOP_TEMPLATE "${CMAKE_CURRENT_SOURCE_DIR}/../../res/linux/xhexviewer.desktop.in")
     set(XHEXVIEWER_DESKTOP_FILE "${CMAKE_CURRENT_BINARY_DIR}/xhexviewer.desktop")
 
@@ -100,11 +103,9 @@ if(UNIX AND NOT APPLE)
 elseif(APPLE)
     set(XHEXVIEWER_RUNTIME_DESTINATION ".")
     set(XHEXVIEWER_DOC_DESTINATION ".")
-    set(XHEXVIEWER_DATA_DESTINATION "${X_ORIGINAL_FILENAME}.app/Contents/Resources")
 else()
     set(XHEXVIEWER_RUNTIME_DESTINATION ".")
     set(XHEXVIEWER_DOC_DESTINATION ".")
-    set(XHEXVIEWER_DATA_DESTINATION ".")
 endif()
 
 install(TARGETS ${XHEXVIEWER_GUI_TARGET}
