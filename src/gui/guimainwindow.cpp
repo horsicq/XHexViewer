@@ -399,8 +399,7 @@ void GuiMainWindow::createMenus()
     addHexAction(pMenuCopy, tr("Address"), "_copyAddressSlot", XOptions::ICONTYPE_ADDRESS);
     addHexAction(pMenuCopy, tr("Relative address"), "_copyRelAddressSlot", XOptions::ICONTYPE_ADDRESS);
     pMenuEdit->addSeparator();
-    QAction *pActionHexSignature =
-        addSelectionAction(pMenuEdit, tr("Create &hex signature..."), "_hexSignatureSlot", XOptions::ICONTYPE_SIGNATURE);
+    QAction *pActionHexSignature = addSelectionAction(pMenuEdit, tr("Create &hex signature..."), "_hexSignatureSlot", XOptions::ICONTYPE_SIGNATURE);
     pActionHexSignature->setStatusTip(tr("Create a hexadecimal signature from the selection"));
 
     QMenu *pMenuDisplay = pMenuView->addMenu(QIcon(QStringLiteral(":/icons/Table.16.16.png")), tr("&Display"));
@@ -408,8 +407,7 @@ void GuiMainWindow::createMenus()
     QActionGroup *pElementModeGroup = new QActionGroup(this);
     pElementModeGroup->setExclusive(true);
 
-    auto addElementModeAction = [this, pMenuElementMode, pElementModeGroup](const QString &sText, const QString &sComboText,
-                                                                          XHexView::ELEMENT_MODE mode) {
+    auto addElementModeAction = [this, pMenuElementMode, pElementModeGroup](const QString &sText, const QString &sComboText, XHexView::ELEMENT_MODE mode) {
         QAction *pAction = new QAction(sText, this);
         pAction->setCheckable(true);
         pAction->setData((qint32)mode);
@@ -521,8 +519,7 @@ void GuiMainWindow::createMenus()
     pMenuDisplay->addAction(g_pActionOverviewMap);
     pMenuDisplay->addSeparator();
     QAction *pActionResetDisplay = new QAction(QIcon(QStringLiteral(":/icons/Refresh.16.16.png")), tr("&Reset display"), this);
-    pActionResetDisplay->setStatusTip(
-        tr("Restore hex bytes, default text encoding, file offsets in hexadecimal, 16 bytes per line, and the overview map"));
+    pActionResetDisplay->setStatusTip(tr("Restore hex bytes, default text encoding, file offsets in hexadecimal, 16 bytes per line, and the overview map"));
     pMenuDisplay->addAction(pActionResetDisplay);
     pMenuView->addSeparator();
 
@@ -542,8 +539,8 @@ void GuiMainWindow::createMenus()
     pMenuZoom->addAction(pActionResetZoom);
     pMenuView->addSeparator();
 
-    QAction *pActionDataInspector = addViewAction(pMenuView, tr("Data &inspector"), "_dataInspector", XOptions::ICONTYPE_INSPECTOR,
-                                                  XDeviceTableEditView::VIEWWIDGET_DATAINSPECTOR);
+    QAction *pActionDataInspector =
+        addViewAction(pMenuView, tr("Data &inspector"), "_dataInspector", XOptions::ICONTYPE_INSPECTOR, XDeviceTableEditView::VIEWWIDGET_DATAINSPECTOR);
     pActionDataInspector->setToolTip(tr("Data inspector"));
     pActionDataInspector->setStatusTip(tr("Inspect the selected bytes as common data types"));
     QAction *pActionStrings = addViewAction(pMenuView, tr("&Strings"), "_strings", XOptions::ICONTYPE_STRING, XDeviceTableEditView::VIEWWIDGET_STRINGS);
@@ -694,11 +691,10 @@ void GuiMainWindow::createMenus()
     connect(pActionShortcuts, SIGNAL(triggered()), this, SLOT(actionShortcutsSlot()));
     connect(pActionAboutQt, &QAction::triggered, qApp, &QApplication::aboutQt);
     connect(ui->pushButtonOpenWelcome, SIGNAL(clicked()), this, SLOT(actionOpenSlot()));
-    connect(pRecentFilesMenu, SIGNAL(triggered(QAction*)), this, SLOT(updateRecentFilesState()), Qt::QueuedConnection);
+    connect(pRecentFilesMenu, SIGNAL(triggered(QAction *)), this, SLOT(updateRecentFilesState()), Qt::QueuedConnection);
     connect(pActionStatusBar, &QAction::toggled, statusBar(), &QStatusBar::setVisible);
-    connect(pActionFullScreen, &QAction::toggled, this, [this](bool bChecked) {
-        setWindowState(bChecked ? (windowState() | Qt::WindowFullScreen) : (windowState() & ~Qt::WindowFullScreen));
-    });
+    connect(pActionFullScreen, &QAction::toggled, this,
+            [this](bool bChecked) { setWindowState(bChecked ? (windowState() | Qt::WindowFullScreen) : (windowState() & ~Qt::WindowFullScreen)); });
     connect(pMenuInterface, &QMenu::aboutToShow, this, [this, pActionStatusBar, pActionFullScreen]() {
         const QSignalBlocker statusBarBlocker(pActionStatusBar);
         const QSignalBlocker stayOnTopBlocker(g_pActionStayOnTop);
@@ -757,10 +753,9 @@ void GuiMainWindow::actionFileInformationSlot()
     const QFileInfo fileInfo(g_pFile->fileName());
     const QLocale locale;
     const QString sModified = fileInfo.lastModified().isValid() ? locale.toString(fileInfo.lastModified(), QLocale::ShortFormat) : tr("Unknown");
-    const QString sInformation =
-        tr("Name: %1\nFolder: %2\nFull path: %3\nSize: %4 bytes\nLast modified: %5\nViewer mode: Read-only")
-            .arg(fileInfo.fileName(), QDir::toNativeSeparators(fileInfo.absolutePath()), QDir::toNativeSeparators(fileInfo.absoluteFilePath()),
-                 locale.toString(fileInfo.size()), sModified);
+    const QString sInformation = tr("Name: %1\nFolder: %2\nFull path: %3\nSize: %4 bytes\nLast modified: %5\nViewer mode: Read-only")
+                                     .arg(fileInfo.fileName(), QDir::toNativeSeparators(fileInfo.absolutePath()), QDir::toNativeSeparators(fileInfo.absoluteFilePath()),
+                                          locale.toString(fileInfo.size()), sModified);
 
     QMessageBox::information(this, tr("File information"), sInformation);
 }
@@ -1049,8 +1044,8 @@ void GuiMainWindow::actionCopySelectionFormattedSlot()
         }
     }
 
-    const QStringList listMessages = {tr("Spaced hexadecimal bytes copied"), tr("Compact hexadecimal string copied"),
-                                      tr("C/C++ byte array copied"), tr("Escaped bytes copied")};
+    const QStringList listMessages = {tr("Spaced hexadecimal bytes copied"), tr("Compact hexadecimal string copied"), tr("C/C++ byte array copied"),
+                                      tr("Escaped bytes copied")};
     copyTextToClipboard(QString::fromLatin1(baResult), listMessages.value(nFormat, tr("Selection copied")));
 }
 
@@ -1086,9 +1081,8 @@ void GuiMainWindow::actionCopySelectionSizeSlot()
         return;
     }
 
-    const QString sSize = g_pHexView->getLocationBase() == 16
-                              ? QStringLiteral("0x%1").arg(QString::number((quint64)state.nSelectionSize, 16).toUpper())
-                              : QString::number(state.nSelectionSize);
+    const QString sSize = g_pHexView->getLocationBase() == 16 ? QStringLiteral("0x%1").arg(QString::number((quint64)state.nSelectionSize, 16).toUpper())
+                                                              : QString::number(state.nSelectionSize);
     copyTextToClipboard(sSize, tr("Selection size copied"));
 }
 
@@ -1167,8 +1161,7 @@ void GuiMainWindow::viewWidgetsStateChangedSlot()
         bool bChecked = false;
 
         if (g_pHexView) {
-            const XDeviceTableEditView::VIEWWIDGET viewWidget =
-                static_cast<XDeviceTableEditView::VIEWWIDGET>(pAction->property("VIEW_WIDGET").toInt());
+            const XDeviceTableEditView::VIEWWIDGET viewWidget = static_cast<XDeviceTableEditView::VIEWWIDGET>(pAction->property("VIEW_WIDGET").toInt());
             bChecked = g_pHexView->getViewWidgetState(viewWidget);
         }
 
@@ -1186,8 +1179,7 @@ void GuiMainWindow::updateFileStatus()
 {
     if (g_pFile) {
         const QFileInfo fileInfo(g_pFile->fileName());
-        g_pFileStatus->setText(
-            tr("%1 | %2 bytes | Read-only view | %3 bytes/line").arg(fileInfo.fileName(), QLocale().toString(fileInfo.size())).arg(g_nBytesPerLine));
+        g_pFileStatus->setText(tr("%1 | %2 bytes | Read-only view | %3 bytes/line").arg(fileInfo.fileName(), QLocale().toString(fileInfo.size())).arg(g_nBytesPerLine));
     }
 }
 
@@ -1525,12 +1517,10 @@ void GuiMainWindow::processFile(const QString &sFileName)
 
         g_pBytesPerLineCombo = pBytesPerLineCombo;
         g_pElementModeCombo = pElementModeCombo;
-        connect(pBytesPerLineCombo, QOverload<int>::of(&QComboBox::activated), this, [this, pBytesPerLineCombo](qint32 nIndex) {
-            setBytesPerLine(pBytesPerLineCombo->itemData(nIndex).toInt());
-        });
-        connect(pElementModeCombo, QOverload<int>::of(&QComboBox::activated), this, [this, pElementModeCombo](qint32 nIndex) {
-            setElementMode((XHexView::ELEMENT_MODE)pElementModeCombo->itemData(nIndex).toInt());
-        });
+        connect(pBytesPerLineCombo, QOverload<int>::of(&QComboBox::activated), this,
+                [this, pBytesPerLineCombo](qint32 nIndex) { setBytesPerLine(pBytesPerLineCombo->itemData(nIndex).toInt()); });
+        connect(pElementModeCombo, QOverload<int>::of(&QComboBox::activated), this,
+                [this, pElementModeCombo](qint32 nIndex) { setElementMode((XHexView::ELEMENT_MODE)pElementModeCombo->itemData(nIndex).toInt()); });
         syncDisplayActions();
     }
 
@@ -1659,4 +1649,3 @@ void GuiMainWindow::actionShortcutsSlot()
     updateMenuShortcutHints();
     adjustWindow();
 }
-
