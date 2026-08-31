@@ -1,6 +1,5 @@
 include(../../dep/build_tools/cmake/cpp_standart_setup.cmake)
 
-add_definitions(-DUSE_ARCHIVE)
 add_definitions(-DUSE_YARA)
 add_definitions(-DUSE_XSIMD)
 
