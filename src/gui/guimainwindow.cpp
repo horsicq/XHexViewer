@@ -450,6 +450,7 @@ void GuiMainWindow::createMenus()
         connect(pActionBytesPerLine, SIGNAL(triggered()), this, SLOT(actionBytesPerLineSlot()));
     }
 
+#if (QT_VERSION_MAJOR < 6) || defined(QT_CORE5COMPAT_LIB)
     QMenu *pMenuTextEncoding = pMenuDisplay->addMenu(QIcon(QStringLiteral(":/icons/String.16.16.png")), tr("&Text encoding"));
     QActionGroup *pTextEncodingGroup = new QActionGroup(this);
     pTextEncodingGroup->setExclusive(true);
@@ -473,6 +474,7 @@ void GuiMainWindow::createMenus()
     pMenuTextEncoding->addSeparator();
     addTextEncodingAction(QStringLiteral("ISO-8859-1"), QStringLiteral("ISO-8859-1"));
     addTextEncodingAction(QStringLiteral("Windows-1252"), QStringLiteral("windows-1252"));
+#endif
 
     pMenuDisplay->addSeparator();
     QMenu *pMenuLocationMode = pMenuDisplay->addMenu(QIcon(QStringLiteral(":/icons/Offset.16.16.png")), tr("&Location labels"));
@@ -555,8 +557,6 @@ void GuiMainWindow::createMenus()
     addHexAction(pMenuBookmarks, tr("Add bookmark..."), "_bookmarkNew", XOptions::ICONTYPE_ADD);
     addViewAction(pMenuBookmarks, tr("Manage bookmarks..."), "_bookmarkList", XOptions::ICONTYPE_LIST, XDeviceTableEditView::VIEWWIDGET_BOOKMARKS);
 
-    addHexAction(pMenuTools, tr("Structures..."), "_structs", XOptions::ICONTYPE_STRUCTS);
-    pMenuTools->addSeparator();
     pMenuTools->addAction(pActionShortcuts);
     pMenuTools->addAction(pActionOptions);
     pMenuHelp->addAction(pActionAbout);
@@ -734,8 +734,11 @@ void GuiMainWindow::actionOptionsSlot()
     dialogOptions.setGlobal(&g_xShortcuts, &g_xOptions);
     dialogOptions.exec();
 
-    // ui->widgetViewer->adjustView();
     adjustWindow();
+
+    if (g_pHexView) {
+        g_pHexView->_adjustView();
+    }
 }
 
 void GuiMainWindow::actionAboutSlot()
@@ -772,24 +775,18 @@ bool GuiMainWindow::readSelectedBytes(QByteArray *pData, qint64 nMaximumSize)
         return false;
     }
 
-    const XDeviceTableView::DEVICESTATE state = g_pHexView->getDeviceState();
-    if (state.nSelectionSize <= 0) {
+    const XAbstractTableView::STATE state = g_pHexView->getState();
+    if (state.nSelectionViewSize <= 0) {
         return false;
     }
 
-    if (state.nSelectionSize > nMaximumSize) {
+    if (state.nSelectionViewSize > nMaximumSize) {
         statusBar()->showMessage(tr("Selection is too large for formatted clipboard copy (maximum 1 MiB)"), 4000);
         return false;
     }
 
-    QFile selectionFile(g_pFile->fileName());
-    if (!selectionFile.open(QIODevice::ReadOnly) || !selectionFile.seek((qint64)state.nSelectionDeviceOffset)) {
-        statusBar()->showMessage(tr("Cannot read the selected bytes"), 3000);
-        return false;
-    }
-
-    *pData = selectionFile.read(state.nSelectionSize);
-    if (pData->size() != state.nSelectionSize) {
+    *pData = g_pHexView->getBinaryView()->readViewArray(state.nSelectionViewPos, (qint32)state.nSelectionViewSize);
+    if (pData->size() != state.nSelectionViewSize) {
         pData->clear();
         statusBar()->showMessage(tr("Cannot read the complete selection"), 3000);
         return false;
@@ -982,14 +979,17 @@ void GuiMainWindow::actionCopyChecksumSlot()
         return;
     }
 
-    QFile checksumFile(g_pFile->fileName());
-    if (!checksumFile.open(QIODevice::ReadOnly)) {
+    const qint64 nOriginalPosition = g_pFile->pos();
+    if (!g_pFile->seek(0)) {
         QMessageBox::critical(this, tr("Error"), tr("Cannot read the current file"));
         return;
     }
 
     QCryptographicHash hash((QCryptographicHash::Algorithm)pAction->data().toInt());
-    if (!hash.addData(&checksumFile)) {
+    const bool bHashResult = hash.addData(g_pFile);
+    const bool bPositionRestored = (nOriginalPosition < 0) || g_pFile->seek(nOriginalPosition);
+
+    if (!bHashResult || !bPositionRestored) {
         QMessageBox::critical(this, tr("Error"), tr("Cannot calculate the file checksum"));
         return;
     }
@@ -1211,8 +1211,8 @@ void GuiMainWindow::setBytesPerLine(qint32 nBytesPerLine, bool bShowMessage)
         return;
     }
 
-    g_nBytesPerLine = nBytesPerLine;
     g_pHexView->setBytesProLine(nBytesPerLine);
+    g_nBytesPerLine = g_pHexView->getBytesProLine();
     syncDisplayActions();
     updateFileStatus();
 
@@ -1249,12 +1249,12 @@ void GuiMainWindow::setTextEncoding(const QString &sCodePage, bool bShowMessage)
         return;
     }
 
-    g_sTextEncoding = sCodePage;
     g_pHexView->setCodePage(sCodePage);
+    g_sTextEncoding = g_pHexView->getCodePage();
     syncDisplayActions();
 
     if (bShowMessage) {
-        statusBar()->showMessage(tr("Text encoding: %1").arg(sCodePage.isEmpty() ? tr("System / default") : sCodePage), 2000);
+        statusBar()->showMessage(tr("Text encoding: %1").arg(g_sTextEncoding.isEmpty() ? tr("System / default") : g_sTextEncoding), 2000);
     }
 }
 
@@ -1448,6 +1448,11 @@ void GuiMainWindow::processFile(const QString &sFileName)
         connect(g_pHexView, SIGNAL(selectionChanged()), this, SLOT(selectionChangedSlot()));
         connect(g_pHexView, SIGNAL(viewWidgetsStateChanged()), this, SLOT(viewWidgetsStateChangedSlot()));
         connect(g_pHexView, &XDeviceTableView::visitedStateChanged, this, [this]() { updateNavigationActions(); });
+        connect(g_pHexView, &XHexView::bytesPerLineChanged, this, [this](qint32 nBytesPerLine) {
+            g_nBytesPerLine = nBytesPerLine;
+            syncDisplayActions();
+            updateFileStatus();
+        });
         connect(g_pHexView, &XHexView::elementModeChanged, this, [this](qint32 nMode) {
             g_elementMode = (XHexView::ELEMENT_MODE)nMode;
             syncDisplayActions();
@@ -1548,6 +1553,11 @@ void GuiMainWindow::errorMessageSlot(const QString &sText)
 void GuiMainWindow::closeCurrentFile()
 {
     setDocumentActionsEnabled(false);
+
+    if (g_pXInfo) {
+        g_pInfoMenu->tryToSave();
+    }
+
     g_pHexView = nullptr;
     g_pBytesPerLineCombo = nullptr;
     g_pElementModeCombo = nullptr;
@@ -1558,10 +1568,12 @@ void GuiMainWindow::closeCurrentFile()
     g_nBytesPerLine = 16;
     g_elementMode = XHexView::ELEMENT_MODE_HEX;
     g_sTextEncoding.clear();
-    ui->mdiArea->closeAllSubWindows();
+    const QList<QMdiSubWindow *> listSubWindows = ui->mdiArea->subWindowList();
+    for (QMdiSubWindow *pSubWindow : listSubWindows) {
+        delete pSubWindow;
+    }
 
     if (g_pXInfo) {
-        g_pInfoMenu->tryToSave();
         g_pInfoMenu->reset();
         delete g_pXInfo;
         g_pXInfo = nullptr;
