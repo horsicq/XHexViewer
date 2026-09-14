@@ -56,10 +56,6 @@ if(MSVC)
 endif()
 
 target_link_libraries(${XHEXVIEWER_GUI_TARGET} PRIVATE
-    bzip2
-    lzma
-    zlib
-    ppmd
     capstone
     cppfilt
     yara
